@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Compras e Fornecedores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .tabs {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .tab-buttons button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: background-color 0.3s;
+        }
+        .tab-buttons button.active {
+            background-color: #0056b3;
+        }
+        .tab-content {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="search"],
+        input[type="tel"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="search"] {
+            margin-bottom: 20px;
+            font-size: 18px;
+            border: 2px solid #007BFF;
+            background-color: #fff;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        td {
+            background-color: #fff;
+        }
+        .actions button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .actions button:hover {
+            background-color: #c82333;
+        }
+        .edit-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .edit-button:hover {
+            background-color: #218838;
+        }
+        .save-button {
+            background-color: #ffc107;
+            color: white;
+            margin-left: 10px;
+        }
+        .save-button:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Compras e Fornecedores</h1>
+    <div class="tabs">
+        <div class="tab-buttons">
+            <button class="active" onclick="showTab('compras')">Compras</button>
+            <button onclick="showTab('fornecedores')">Fornecedores</button>
+        </div>
+    </div>
+
+    <!-- Aba de Compras -->
+    <div id="compras" class="tab-content active">
+        <form id="formCompra">
+            <label for="item">Item:</label>
+            <input type="text" id="item" name="item" required>
+
+            <label for="fornecedorCompra">Fornecedor:</label>
+            <input type="text" id="fornecedorCompra" name="fornecedorCompra" required>
+
+            <label for="preco">Preço:</label>
+            <input type="number" id="preco" name="preco" step="0.01" required>
+
+            <label for="dataCompra">Data da Compra:</label>
+            <input type="date" id="dataCompra" name="dataCompra" required>
+
+            <button type="button" onclick="adicionarCompra()">Adicionar Compra</button>
+        </form>
+
+        <input type="search" id="buscaItem" placeholder="Buscar por item..." oninput="filtrarCompras()">
+
+        <table id="tabelaCompras">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Fornecedor</th>
+                    <th>Preço</th>
+                    <th>Data da Compra</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Aba de Fornecedores -->
+    <div id="fornecedores" class="tab-content">
+        <form id="formFornecedor">
+            <label for="nomeFornecedor">Nome do Fornecedor:</label>
+            <input type="text" id="nomeFornecedor" name="nomeFornecedor" required>
+
+            <label for="nomeVendedor">Nome do Vendedor:</label>
+            <input type="text" id="nomeVendedor" name="nomeVendedor" required>
+
+            <label for="telefoneContato">Telefone de Contato:</label>
+            <input type="tel" id="telefoneContato" name="telefoneContato" required>
+
+            <label for="itensComprados">Itens Comprados:</label>
+            <input type="text" id="itensComprados" name="itensComprados" required>
+
+            <button type="button" onclick="adicionarFornecedor()">Adicionar Fornecedor</button>
+        </form>
+
+        <input type="search" id="buscaFornecedor" placeholder="Buscar por fornecedor..." oninput="filtrarFornecedores()">
+        <input type="search" id="buscaItem" placeholder="Buscar por Item..." oninput="filtrarItem()">
+
+        <table id="tabelaFornecedores">
+            <thead>
+                <tr>
+                    <th>Nome do Fornecedor</th>
+                    <th>Nome do Vendedor</th>
+                    <th>Telefone de Contato</th>
+                    <th>Itens Comprados</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const compras = [];
+        const fornecedores = [];
+        let indexEditadoCompra = null;
+        let indexEditadoFornecedor = null;
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.tab-buttons button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.tab-buttons button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        function adicionarCompra() {
+            const item = document.getElementById('item').value;
+            const fornecedor = document.getElementById('fornecedorCompra').value;
+            const preco = parseFloat(document.getElementById('preco').value);
+            const dataCompra = document.getElementById('dataCompra').value;
+
+            if (indexEditadoCompra !== null) {
+                compras[indexEditadoCompra] = { item, fornecedor, preco, dataCompra };
+                indexEditadoCompra = null;
+            } else {
+                compras.push({ item, fornecedor, preco, dataCompra });
+            }
+
+            atualizarTabelaCompras();
+            document.getElementById('formCompra').reset();
+        }
+
+        function atualizarTabelaCompras() {
+            const tbody = document.querySelector('#tabelaCompras tbody');
+            tbody.innerHTML = '';
+            compras.forEach((compra, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${compra.item}</td>
+                    <td>${compra.fornecedor}</td>
+                    <td>R$ ${compra.preco.toFixed(2)}</td>
+                    <td>${compra.dataCompra}</td>
+                    <td class="actions">
+                        <button class="edit-button" onclick="editarCompra(${index})">Editar</button>
+                        <button onclick="deletarCompra(${index})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editarCompra(index) {
+            const compra = compras[index];
+            const row = document.querySelector(`#tabelaCompras tbody tr:nth-child(${index + 1})`);
+            row.innerHTML = `
+                <td><input type="text" value="${compra.item}"></td>
+                <td><input type="text" value="${compra.fornecedor}"></td>
+                <td><input type="number" step="0.01" value="${compra.preco}"></td>
+                <td><input type="date" value="${compra.dataCompra}"></td>
+                <td class="actions">
+                    <button class="save-button" onclick="salvarCompra(${index})">Salvar</button>
+                    <button onclick="deletarCompra(${index})">Excluir</button>
+                </td>
+            `;
+        }
+
+        function salvarCompra(index) {
+            const row = document.querySelector(`#tabelaCompras tbody tr:nth-child(${index + 1})`);
+            const inputs = row.querySelectorAll('input');
+            compras[index] = {
+                item: inputs[0].value,
+                fornecedor: inputs[1].value,
+                preco: parseFloat(inputs[2].value),
+                dataCompra: inputs[3].value
+            };
+            atualizarTabelaCompras();
+        }
+
+        function deletarCompra(index) {
+            compras.splice(index, 1);
+            atualizarTabelaCompras();
+        }
+
+        function filtrarCompras() {
+            const filtro = document.getElementById('buscaItem').value.toLowerCase();
+            const tbody = document.querySelector('#tabelaCompras tbody');
+            tbody.innerHTML = '';
+            compras.forEach((compra) => {
+                if (compra.item.toLowerCase().includes(filtro)) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${compra.item}</td>
+                        <td>${compra.fornecedor}</td>
+                        <td>R$ ${compra.preco.toFixed(2)}</td>
+                        <td>${compra.dataCompra}</td>
+                        <td class="actions">
+                            <button class="edit-button" onclick="editarCompra(${compras.indexOf(compra)})">Editar</button>
+                            <button onclick="deletarCompra(${compras.indexOf(compra)})">Excluir</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+        }
+
+        function adicionarFornecedor() {
+            const nomeFornecedor = document.getElementById('nomeFornecedor').value;
+            const nomeVendedor = document.getElementById('nomeVendedor').value;
+            const telefoneContato = document.getElementById('telefoneContato').value;
+            const itensComprados = document.getElementById('itensComprados').value;
+
+            if (indexEditadoFornecedor !== null) {
+                fornecedores[indexEditadoFornecedor] = { nomeFornecedor, nomeVendedor, telefoneContato, itensComprados };
+                indexEditadoFornecedor = null;
+            } else {
+                fornecedores.push({ nomeFornecedor, nomeVendedor, telefoneContato, itensComprados });
+            }
+
+            atualizarTabelaFornecedores();
+            document.getElementById('formFornecedor').reset();
+        }
+
+        function atualizarTabelaFornecedores() {
+            const tbody = document.querySelector('#tabelaFornecedores tbody');
+            tbody.innerHTML = '';
+            fornecedores.forEach((fornecedor, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fornecedor.nomeFornecedor}</td>
+                    <td>${fornecedor.nomeVendedor}</td>
+                    <td>${fornecedor.telefoneContato}</td>
+                    <td>${fornecedor.itensComprados}</td>
+                    <td class="actions">
+                        <button class="edit-button" onclick="editarFornecedor(${index})">Editar</button>
+                        <button onclick="deletarFornecedor(${index})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editarFornecedor(index) {
+            const fornecedor = fornecedores[index];
+            const row = document.querySelector(`#tabelaFornecedores tbody tr:nth-child(${index + 1})`);
+            row.innerHTML = `
+                <td><input type="text" value="${fornecedor.nomeFornecedor}"></td>
+                <td><input type="text" value="${fornecedor.nomeVendedor}"></td>
+                <td><input type="tel" value="${fornecedor.telefoneContato}"></td>
+                <td><input type="text" value="${fornecedor.itensComprados}"></td>
+                <td class="actions">
+                    <button class="save-button" onclick="salvarFornecedor(${index})">Salvar</button>
+                    <button onclick="deletarFornecedor(${index})">Excluir</button>
+                </td>
+            `;
+        }
+
+        function salvarFornecedor(index) {
+            const row = document.querySelector(`#tabelaFornecedores tbody tr:nth-child(${index + 1})`);
+            const inputs = row.querySelectorAll('input');
+            fornecedores[index] = {
+                nomeFornecedor: inputs[0].value,
+                nomeVendedor: inputs[1].value,
+                telefoneContato: inputs[2].value,
+                itensComprados: inputs[3].value
+            };
+            atualizarTabelaFornecedores();
+        }
+
+        function deletarFornecedor(index) {
+            fornecedores.splice(index, 1);
+            atualizarTabelaFornecedores();
+        }
+
+        function filtrarFornecedores() {
+            const filtro = document.getElementById('buscaFornecedor').value.toLowerCase();
+            const tbody = document.querySelector('#tabelaFornecedores tbody');
+            tbody.innerHTML = '';
+            fornecedores.forEach((fornecedor) => {
+                if (fornecedor.nomeFornecedor.toLowerCase().includes(filtro)) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${fornecedor.nomeFornecedor}</td>
+                        <td>${fornecedor.nomeVendedor}</td>
+                        <td>${fornecedor.telefoneContato}</td>
+                        <td>${fornecedor.itensComprados}</td>
+                        <td class="actions">
+                            <button class="edit-button" onclick="editarFornecedor(${fornecedores.indexOf(fornecedor)})">Editar</button>
+                            <button onclick="deletarFornecedor(${fornecedores.indexOf(fornecedor)})">Excluir</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
